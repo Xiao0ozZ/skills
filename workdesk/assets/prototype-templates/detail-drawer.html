@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WorkDesk Detail Drawer Template</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://unpkg.com/element-plus@2.8.0/dist/index.css" />
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="https://unpkg.com/element-plus@2.8.0/dist/index.full.js"></script>
+  <script src="https://unpkg.com/@element-plus/icons-vue"></script>
+  <style>
+    body { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f3f4f6; }
+    .brand-bg { background: #00689E; }
+    .panel { border: 1px solid #e5e7eb; border-radius: 12px; background: #fff; box-shadow: 0 1px 2px rgb(15 23 42 / 0.05); }
+  </style>
+</head>
+<body>
+  <div id="app" class="h-screen flex overflow-hidden">
+    <aside class="w-64 shrink-0 brand-bg text-white flex flex-col">
+      <div class="h-16 px-5 flex items-center font-semibold border-b border-white/10">详情抽屉母版</div>
+      <nav class="flex-1 px-3 py-5 text-sm space-y-1">
+        <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-white/20 font-semibold" href="#"><el-icon><Files /></el-icon>对象详情</a>
+        <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/70 hover:bg-white/10" href="#"><el-icon><Clock /></el-icon>操作记录</a>
+      </nav>
+    </aside>
+
+    <div class="flex-1 flex flex-col overflow-hidden">
+      <header class="h-16 bg-white border-b shadow-sm px-6 flex items-center justify-between shrink-0">
+        <div class="flex items-center text-gray-500 text-sm">
+          <el-icon class="mr-2"><HomeFilled /></el-icon>
+          <span>首页</span><span class="mx-2">/</span><span>对象管理</span><span class="mx-2">/</span><span class="text-gray-800 font-bold">对象看板</span>
+        </div>
+        <el-dropdown trigger="click">
+          <div class="flex items-center cursor-pointer pl-2">
+            <el-avatar :size="32" src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"></el-avatar>
+            <span class="ml-2 text-sm font-medium text-gray-700">Admin</span>
+          </div>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item><a href="login.html" class="block w-full">退出登录</a></el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+      </header>
+
+      <main class="flex-1 overflow-hidden p-6 flex gap-5">
+        <section class="w-80 shrink-0 panel flex flex-col overflow-hidden">
+          <div class="p-4 border-b bg-gray-50">
+            <el-input v-model="keyword" placeholder="搜索对象" prefix-icon="Search" clearable />
+          </div>
+          <div class="flex-1 overflow-auto p-3 space-y-2">
+            <button v-for="item in filteredItems" :key="item.id" class="w-full text-left rounded-lg border p-3 hover:border-[#00689E] hover:bg-blue-50/40 transition-colors" :class="active?.id === item.id ? 'border-[#00689E] bg-blue-50/60' : 'border-gray-200 bg-white'" @click="selectItem(item)">
+              <div class="flex items-center justify-between gap-2">
+                <div class="font-medium text-gray-900">{{ item.name }}</div>
+                <el-tag size="small" :type="item.type">{{ item.status }}</el-tag>
+              </div>
+              <div class="text-xs text-gray-500 mt-1">{{ item.desc }}</div>
+            </button>
+          </div>
+        </section>
+
+        <section class="flex-1 min-w-0 overflow-auto">
+          <div class="flex items-end justify-between gap-4 mb-6">
+            <div>
+              <h1 class="text-2xl font-bold text-gray-800 tracking-tight">对象看板</h1>
+              <p class="text-gray-500 text-sm mt-1">适用于“列表选择 + 抽屉详情 + 时间线”的页面。</p>
+            </div>
+            <div class="flex gap-3 shrink-0">
+              <el-button plain>次级操作</el-button>
+              <el-button type="primary" color="#00689E">主操作</el-button>
+            </div>
+          </div>
+          <div class="panel p-5 overflow-auto">
+            <div class="flex items-start justify-between mb-5">
+              <div>
+                <div class="text-sm text-gray-500">当前对象</div>
+                <h2 class="text-xl font-semibold text-gray-900 mt-1">{{ active.name }}</h2>
+                <p class="text-sm text-gray-500 mt-1">{{ active.desc }}</p>
+              </div>
+              <el-button type="primary" color="#00689E" @click="drawerVisible = true">展开详情</el-button>
+            </div>
+          <div class="grid grid-cols-3 gap-4 mb-5">
+            <div class="rounded-lg border border-gray-100 bg-gray-50 p-4" v-for="meta in active.meta" :key="meta.label">
+              <div class="text-xs text-gray-500">{{ meta.label }}</div>
+              <div class="mt-2 text-base font-semibold text-gray-900">{{ meta.value }}</div>
+            </div>
+          </div>
+          <el-tabs v-model="tab">
+            <el-tab-pane label="明细" name="detail">
+              <el-descriptions :column="2" border>
+                <el-descriptions-item label="字段一">{{ active.detail.a }}</el-descriptions-item>
+                <el-descriptions-item label="字段二">{{ active.detail.b }}</el-descriptions-item>
+                <el-descriptions-item label="字段三">{{ active.detail.c }}</el-descriptions-item>
+                <el-descriptions-item label="字段四">{{ active.detail.d }}</el-descriptions-item>
+              </el-descriptions>
+            </el-tab-pane>
+            <el-tab-pane label="记录" name="log">
+              <el-timeline>
+                <el-timeline-item v-for="log in active.logs" :key="log.time" :timestamp="log.time" :type="log.type">
+                  <div class="font-medium text-gray-800">{{ log.title }}</div>
+                  <div class="text-xs text-gray-500 mt-1">{{ log.note }}</div>
+                </el-timeline-item>
+              </el-timeline>
+            </el-tab-pane>
+          </el-tabs>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <el-drawer v-model="drawerVisible" title="详情抽屉" size="420px">
+      <div class="space-y-4">
+        <div class="rounded-lg border border-gray-100 bg-gray-50 p-4">
+          <div class="text-xs text-gray-500">对象状态</div>
+          <div class="mt-2 flex items-center justify-between">
+            <span class="font-semibold text-gray-900">{{ active.status }}</span>
+            <el-tag :type="active.type">{{ active.status }}</el-tag>
+          </div>
+        </div>
+        <el-timeline>
+          <el-timeline-item v-for="log in active.logs" :key="log.time" :timestamp="log.time" :type="log.type">
+            {{ log.title }}
+          </el-timeline-item>
+        </el-timeline>
+        <div class="flex gap-2">
+          <el-button class="flex-1" plain>次级动作</el-button>
+          <el-button class="flex-1" type="primary" color="#00689E">主动作</el-button>
+        </div>
+      </div>
+    </el-drawer>
+  </div>
+
+  <script>
+    const { createApp, ref, computed } = Vue;
+    const app = createApp({
+      setup() {
+        const keyword = ref('');
+        const tab = ref('detail');
+        const drawerVisible = ref(false);
+        const items = ref([
+          { id: 1, name: '对象 A', status: '正常', type: 'success', desc: '用于展示正常状态', meta: [{ label: '指标一', value: '82%' }, { label: '指标二', value: '12' }, { label: '指标三', value: '3 天' }], detail: { a: '内容 A', b: '内容 B', c: '内容 C', d: '内容 D' }, logs: [{ time: '10:30', title: '已创建', note: '系统创建记录', type: 'primary' }, { time: '11:20', title: '已审核', note: '人工审核通过', type: 'success' }] },
+          { id: 2, name: '对象 B', status: '待处理', type: 'warning', desc: '需要人工确认', meta: [{ label: '指标一', value: '46%' }, { label: '指标二', value: '5' }, { label: '指标三', value: '1 天' }], detail: { a: '内容 E', b: '内容 F', c: '内容 G', d: '内容 H' }, logs: [{ time: '09:15', title: '进入待处理', note: '等待确认', type: 'warning' }] }
+        ]);
+        const active = ref(items.value[0]);
+        const filteredItems = computed(() => items.value.filter(item => !keyword.value || item.name.includes(keyword.value)));
+        const selectItem = item => { active.value = item; tab.value = 'detail'; };
+        return { keyword, tab, drawerVisible, items, active, filteredItems, selectItem };
+      }
+    });
+    for (const [key, component] of Object.entries(ElementPlusIconsVue)) app.component(key, component);
+    app.use(ElementPlus).mount('#app');
+  </script>
+</body>
+</html>

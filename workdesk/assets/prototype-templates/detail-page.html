@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WorkDesk Detail Page Template</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://unpkg.com/element-plus@2.8.0/dist/index.css" />
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="https://unpkg.com/element-plus@2.8.0/dist/index.full.js"></script>
+  <script src="https://unpkg.com/@element-plus/icons-vue"></script>
+  <style>
+    body { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f3f4f6; }
+    .brand-bg { background: #00689E; }
+    .panel { border: 1px solid #e5e7eb; border-radius: 12px; background: #fff; box-shadow: 0 1px 2px rgb(15 23 42 / 0.05); }
+  </style>
+</head>
+<body>
+  <div id="app" class="h-screen flex overflow-hidden">
+    <aside class="w-64 shrink-0 brand-bg text-white flex flex-col">
+      <div class="h-16 px-5 flex items-center border-b border-white/10 font-semibold">详情页母版</div>
+      <nav class="flex-1 px-3 py-5 text-sm space-y-1">
+        <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-white/20 font-semibold" href="#"><el-icon><User /></el-icon>对象详情</a>
+        <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/70 hover:bg-white/10" href="#"><el-icon><List /></el-icon>对象列表</a>
+      </nav>
+    </aside>
+
+    <div class="flex-1 flex flex-col overflow-hidden">
+      <header class="h-16 bg-white border-b shadow-sm px-6 flex items-center justify-between shrink-0">
+        <div class="flex items-center text-gray-500 text-sm">
+          <el-icon class="mr-2"><HomeFilled /></el-icon>
+          <span>首页</span><span class="mx-2">/</span><span>对象管理</span><span class="mx-2">/</span><span class="text-gray-800 font-bold">对象详情</span>
+        </div>
+        <el-dropdown trigger="click">
+          <div class="flex items-center cursor-pointer pl-2">
+            <el-avatar :size="32" src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"></el-avatar>
+            <span class="ml-2 text-sm font-medium text-gray-700">Admin</span>
+          </div>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item><a href="login.html" class="block w-full">退出登录</a></el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+      </header>
+
+      <main class="flex-1 overflow-auto p-6">
+        <div class="mb-5">
+          <el-button plain :icon="ArrowLeft">返回</el-button>
+        </div>
+
+        <section class="panel p-6 mb-5">
+          <div class="flex items-start justify-between gap-4">
+            <div class="flex items-start gap-4">
+              <div class="w-16 h-16 rounded-2xl bg-blue-50 text-[#00689E] flex items-center justify-center">
+                <el-icon size="30"><UserFilled /></el-icon>
+              </div>
+              <div>
+                <div class="flex items-center gap-3">
+                  <h1 class="text-2xl font-bold text-gray-900">对象名称 / 订单编号</h1>
+                  <el-tag type="success" effect="plain">正常</el-tag>
+                  <el-tag effect="plain">VIP</el-tag>
+                </div>
+                <p class="text-sm text-gray-500 mt-2">一句话说明身份、来源、风险或当前阶段。</p>
+                <div class="flex flex-wrap gap-2 mt-4 text-xs text-gray-500">
+                  <span>编号：OBJ-20260629</span>
+                  <span>负责人：张三</span>
+                  <span>更新时间：2026-06-29 10:30</span>
+                </div>
+              </div>
+            </div>
+            <div class="flex items-center gap-2 shrink-0">
+              <el-button plain>次级操作</el-button>
+              <el-dropdown>
+                <el-button plain>更多操作<el-icon class="el-icon--right"><ArrowDown /></el-icon></el-button>
+                <template #dropdown>
+                  <el-dropdown-menu>
+                    <el-dropdown-item>查看日志</el-dropdown-item>
+                    <el-dropdown-item>导出记录</el-dropdown-item>
+                    <el-dropdown-item divided class="text-red-500">风险操作</el-dropdown-item>
+                  </el-dropdown-menu>
+                </template>
+              </el-dropdown>
+              <el-button type="primary" color="#00689E">主操作</el-button>
+            </div>
+          </div>
+        </section>
+
+        <section class="grid grid-cols-4 gap-4 mb-5">
+          <div v-for="metric in metrics" :key="metric.label" class="panel p-4">
+            <div class="text-xs text-gray-500">{{ metric.label }}</div>
+            <div class="text-2xl font-semibold text-gray-900 mt-2">{{ metric.value }}</div>
+            <div class="text-xs text-gray-500 mt-1">{{ metric.note }}</div>
+          </div>
+        </section>
+
+        <section class="panel overflow-hidden">
+          <el-tabs v-model="activeTab" class="px-5 pt-4">
+            <el-tab-pane label="基础信息" name="profile">
+              <div class="py-4">
+                <el-descriptions :column="3" border>
+                  <el-descriptions-item label="字段一">示例内容</el-descriptions-item>
+                  <el-descriptions-item label="字段二">示例内容</el-descriptions-item>
+                  <el-descriptions-item label="字段三"><el-tag effect="plain">标签</el-tag></el-descriptions-item>
+                  <el-descriptions-item label="字段四">长文本说明</el-descriptions-item>
+                  <el-descriptions-item label="字段五">2026-06-29</el-descriptions-item>
+                  <el-descriptions-item label="字段六">操作人 A</el-descriptions-item>
+                </el-descriptions>
+              </div>
+            </el-tab-pane>
+            <el-tab-pane label="业务记录" name="records">
+              <div class="py-4">
+                <el-table :data="records" stripe style="width: 100%" table-layout="fixed">
+                  <el-table-column prop="time" label="时间" width="170"></el-table-column>
+                  <el-table-column prop="type" label="类型" width="120"></el-table-column>
+                  <el-table-column prop="summary" label="摘要" min-width="220"></el-table-column>
+                  <el-table-column prop="operator" label="操作人" width="120"></el-table-column>
+                  <el-table-column label="操作" width="90" align="right">
+                    <template #default><el-button link type="primary">查看</el-button></template>
+                  </el-table-column>
+                </el-table>
+              </div>
+            </el-tab-pane>
+            <el-tab-pane label="操作日志" name="logs">
+              <div class="py-4">
+                <el-timeline>
+                  <el-timeline-item v-for="log in logs" :key="log.time" :timestamp="log.time">
+                    <div class="font-medium text-gray-800">{{ log.title }}</div>
+                    <div class="text-xs text-gray-500 mt-1">{{ log.desc }}</div>
+                  </el-timeline-item>
+                </el-timeline>
+              </div>
+            </el-tab-pane>
+          </el-tabs>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    const { createApp, ref } = Vue;
+    const app = createApp({
+      setup() {
+        const activeTab = ref('profile');
+        const metrics = ref([
+          { label: '累计次数', value: '36', note: '近 30 天 8 次' },
+          { label: '待处理', value: '2', note: '含风险 1 条' },
+          { label: '可用余额', value: '8,600', note: '示例指标' },
+          { label: '评分', value: '4.8', note: '稳定' }
+        ]);
+        const records = ref([
+          { time: '2026-06-29 10:30', type: '创建', summary: '创建记录并保存快照', operator: '张三' },
+          { time: '2026-06-29 11:20', type: '变更', summary: '更新状态和说明', operator: '李四' }
+        ]);
+        const logs = ref([
+          { time: '2026-06-29 10:30', title: '记录创建', desc: '系统写入初始化信息' },
+          { time: '2026-06-29 11:20', title: '状态变更', desc: '操作人修改当前状态' }
+        ]);
+        return { activeTab, metrics, records, logs, ArrowLeft: ElementPlusIconsVue.ArrowLeft };
+      }
+    });
+    for (const [key, component] of Object.entries(ElementPlusIconsVue)) app.component(key, component);
+    app.use(ElementPlus).mount('#app');
+  </script>
+</body>
+</html>

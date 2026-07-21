@@ -1,0 +1,6 @@
+interface:
+  display_name: "WorkDesk"
+  short_description: "PM工作处理台：分析、原型、交付和知识"
+  default_prompt: "Use $workdesk as my personal PM workdesk: choose quick/work-draft/formal-delivery mode, apply personal methods first, use the prototype module for HTML page mockups, read external sources only when facts or writeback require it, and edit source-library skill files only unless publishing is explicitly requested."
+policy:
+  allow_implicit_invocation: true

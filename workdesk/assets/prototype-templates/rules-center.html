@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WorkDesk Rules Center Template</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://unpkg.com/element-plus@2.8.0/dist/index.css" />
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="https://unpkg.com/element-plus@2.8.0/dist/index.full.js"></script>
+  <script src="https://unpkg.com/@element-plus/icons-vue"></script>
+  <style>
+    body { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #eef2f7; }
+    .brand-bg { background: #00689E; }
+    .panel { border: 1px solid #e5e7eb; border-radius: 12px; background: #fff; box-shadow: 0 1px 2px rgb(15 23 42 / 0.05); }
+  </style>
+</head>
+<body>
+  <div id="app" class="h-screen flex overflow-hidden">
+    <aside class="w-64 shrink-0 brand-bg text-white flex flex-col">
+      <div class="h-16 px-5 flex items-center font-semibold border-b border-white/10">规则中心母版</div>
+      <nav class="flex-1 px-3 py-5 text-sm space-y-1">
+        <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-white/20 font-semibold" href="#"><el-icon><Setting /></el-icon>规则中心</a>
+        <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/70 hover:bg-white/10" href="#"><el-icon><Tickets /></el-icon>版本记录</a>
+      </nav>
+    </aside>
+
+    <div class="flex-1 flex flex-col overflow-hidden">
+      <header class="h-16 bg-white border-b shadow-sm px-6 flex items-center justify-between shrink-0">
+        <div class="flex items-center text-gray-500 text-sm">
+          <el-icon class="mr-2"><HomeFilled /></el-icon>
+          <span>首页</span><span class="mx-2">/</span><span>系统配置</span><span class="mx-2">/</span><span class="text-gray-800 font-bold">规则中心</span>
+        </div>
+        <el-dropdown trigger="click">
+          <div class="flex items-center cursor-pointer pl-2">
+            <el-avatar :size="32" src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"></el-avatar>
+            <span class="ml-2 text-sm font-medium text-gray-700">Admin</span>
+          </div>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item><a href="login.html" class="block w-full">退出登录</a></el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+      </header>
+
+      <main class="flex-1 overflow-auto p-6">
+        <section class="flex items-end justify-between gap-4 mb-6">
+          <div>
+            <h1 class="text-2xl font-bold text-gray-800 tracking-tight">规则中心</h1>
+            <p class="text-gray-500 text-sm mt-1">适用于配置、策略、推送、AI 设置等页面。</p>
+          </div>
+          <div class="flex gap-3 shrink-0">
+            <el-button plain @click="logDialogVisible = true"><el-icon class="mr-1"><Clock /></el-icon>查看日志</el-button>
+            <el-button type="primary" color="#00689E">保存规则</el-button>
+          </div>
+        </section>
+
+        <el-tabs v-model="activeTab" class="panel min-h-[620px] p-1">
+          <el-tab-pane label="基础规则" name="basic">
+            <div class="grid grid-cols-[220px_1fr] gap-5 p-5">
+              <aside class="rounded-xl border border-gray-100 bg-gray-50 p-3 h-fit">
+                <a v-for="section in sections" :key="section.id" :href="'#' + section.id" class="block px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-white hover:text-[#00689E]">{{ section.name }}</a>
+              </aside>
+              <section class="space-y-5">
+                <div id="general" class="panel p-5">
+                  <div class="flex items-center justify-between mb-4">
+                    <div>
+                      <h2 class="font-semibold text-gray-900">通用开关</h2>
+                      <p class="text-xs text-gray-500 mt-1">说明规则目的和影响范围。</p>
+                    </div>
+                    <el-switch v-model="config.enabled" active-text="启用" inactive-text="停用" />
+                  </div>
+                  <el-form label-width="140px" label-position="left">
+                    <el-form-item label="生效范围"><el-select v-model="config.scope" class="w-full" /></el-form-item>
+                    <el-form-item label="人工复核"><el-switch v-model="config.review" /></el-form-item>
+                    <el-form-item label="异常提示"><el-input v-model="config.warning" /></el-form-item>
+                  </el-form>
+                </div>
+                <div id="threshold" class="panel p-5">
+                  <div class="flex items-center justify-between mb-4">
+                    <h2 class="font-semibold text-gray-900">阈值规则</h2>
+                    <el-button type="primary" color="#00689E" plain>新增规则</el-button>
+                  </div>
+                  <div class="grid grid-cols-3 gap-4">
+                    <div v-for="card in ruleCards" :key="card.label" class="rounded-lg border border-gray-100 bg-gray-50 p-4">
+                      <div class="text-xs text-gray-500">{{ card.label }}</div>
+                      <div class="mt-2 text-lg font-semibold text-gray-900">{{ card.value }}</div>
+                      <div class="mt-1 text-xs text-gray-500">{{ card.note }}</div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </el-tab-pane>
+          <el-tab-pane label="消息规则" name="message">
+            <div class="p-5">
+              <el-table :data="messages" border stripe table-layout="fixed">
+                <el-table-column prop="category" label="分类" width="120"></el-table-column>
+                <el-table-column prop="title" label="标题" min-width="180"></el-table-column>
+                <el-table-column prop="trigger" label="触发时机" min-width="180"></el-table-column>
+                <el-table-column label="状态" width="100"><template #default="{ row }"><el-tag :type="row.enabled ? 'success' : 'info'" effect="plain">{{ row.enabled ? '启用' : '停用' }}</el-tag></template></el-table-column>
+                <el-table-column label="操作" width="100" align="right"><template #default><el-button link type="primary">编辑</el-button></template></el-table-column>
+              </el-table>
+            </div>
+          </el-tab-pane>
+        </el-tabs>
+      </main>
+    </div>
+
+    <el-dialog v-model="logDialogVisible" title="规则变更日志" width="760px" destroy-on-close>
+      <el-table :data="logs" border stripe table-layout="fixed">
+        <el-table-column prop="time" label="时间" width="160"></el-table-column>
+        <el-table-column prop="operator" label="操作人" width="120"></el-table-column>
+        <el-table-column prop="action" label="动作" width="140"></el-table-column>
+        <el-table-column prop="note" label="说明" min-width="220"></el-table-column>
+      </el-table>
+    </el-dialog>
+  </div>
+
+  <script>
+    const { createApp, ref, reactive } = Vue;
+    const app = createApp({
+      setup() {
+        const activeTab = ref('basic');
+        const logDialogVisible = ref(false);
+        const sections = ref([{ id: 'general', name: '通用开关' }, { id: 'threshold', name: '阈值规则' }]);
+        const config = reactive({ enabled: true, scope: '', review: true, warning: '触发异常时提示人工确认' });
+        const ruleCards = ref([
+          { label: '阈值一', value: '30 分钟', note: '超出后提醒' },
+          { label: '阈值二', value: '5 次', note: '达到后管控' },
+          { label: '阈值三', value: '人工复核', note: '高风险动作' }
+        ]);
+        const messages = ref([
+          { category: '系统', title: '状态变化通知', trigger: '状态进入待处理', enabled: true },
+          { category: '异常', title: '异常提醒', trigger: '触发高风险规则', enabled: true }
+        ]);
+        const logs = ref([
+          { time: '2026-06-29 10:00', operator: '管理员', action: '更新规则', note: '调整阈值规则' },
+          { time: '2026-06-28 16:30', operator: '管理员', action: '启用规则', note: '开启人工复核' }
+        ]);
+        return { activeTab, logDialogVisible, sections, config, ruleCards, messages, logs };
+      }
+    });
+    for (const [key, component] of Object.entries(ElementPlusIconsVue)) app.component(key, component);
+    app.use(ElementPlus).mount('#app');
+  </script>
+</body>
+</html>

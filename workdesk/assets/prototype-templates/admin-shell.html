@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WorkDesk Admin Shell Template</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://unpkg.com/element-plus@2.8.0/dist/index.css" />
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="https://unpkg.com/element-plus@2.8.0/dist/index.full.js"></script>
+  <script src="https://unpkg.com/@element-plus/icons-vue"></script>
+  <style>
+    body { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f3f4f6; }
+    .brand-bg { background: #00689E; }
+    .shell-card { border: 1px solid #e5e7eb; border-radius: 12px; background: #fff; box-shadow: 0 1px 2px rgb(15 23 42 / 0.05); }
+  </style>
+</head>
+<body class="min-h-screen">
+  <div id="app" class="h-screen flex overflow-hidden">
+    <aside class="w-64 shrink-0 brand-bg text-white flex flex-col">
+      <div class="h-16 px-5 flex items-center border-b border-white/10">
+        <div class="font-semibold">后台原型</div>
+      </div>
+      <nav class="flex-1 px-3 py-5 space-y-1 text-sm overflow-y-auto">
+        <a v-for="item in nav" :key="item.name" href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors" :class="item.active ? 'bg-white/20 text-white font-semibold' : 'text-white/70 hover:bg-white/10 hover:text-white'">
+          <el-icon><component :is="item.icon" /></el-icon>
+          <span>{{ item.name }}</span>
+        </a>
+      </nav>
+      <div class="p-4 border-t border-white/10 text-xs text-white/60">Prototype template</div>
+    </aside>
+
+    <div class="flex-1 min-w-0 flex flex-col overflow-hidden">
+      <header class="h-16 bg-white border-b shadow-sm px-6 flex items-center justify-between shrink-0">
+        <div class="flex items-center text-gray-500 text-sm">
+          <el-icon class="mr-2"><HomeFilled /></el-icon>
+          <span>首页</span><span class="mx-2">/</span><span class="text-gray-800 font-bold">当前页面</span>
+        </div>
+        <el-dropdown trigger="click">
+          <div class="flex items-center cursor-pointer pl-2">
+            <el-avatar :size="32" src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"></el-avatar>
+            <span class="ml-2 text-sm font-medium text-gray-700">Admin</span>
+          </div>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item><a href="login.html" class="block w-full">退出登录</a></el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+      </header>
+
+      <main class="flex-1 overflow-auto p-6">
+        <section class="flex items-end justify-between gap-4 mb-6">
+          <div>
+            <h1 class="text-2xl font-bold text-gray-800 tracking-tight">页面标题</h1>
+            <p class="text-gray-500 text-sm mt-1">一句话说明页面目标，不写长说明。</p>
+          </div>
+          <div class="flex items-center gap-3 shrink-0">
+            <el-button plain>次级操作</el-button>
+            <el-button type="primary" color="#00689E"><el-icon class="mr-1"><Plus /></el-icon>主操作</el-button>
+          </div>
+        </section>
+
+        <section class="grid grid-cols-4 gap-4 mb-6">
+          <div v-for="card in summary" :key="card.label" class="shell-card p-4">
+            <div class="text-xs text-gray-500">{{ card.label }}</div>
+            <div class="mt-2 text-2xl font-semibold text-gray-900">{{ card.value }}</div>
+            <div class="mt-1 text-xs" :class="card.tone">{{ card.note }}</div>
+          </div>
+        </section>
+
+        <section class="shell-card p-5">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <div class="font-semibold text-gray-900">主内容区</div>
+              <div class="text-xs text-gray-500 mt-1">放列表、看板、表单或详情模块。</div>
+            </div>
+            <el-tag type="info" effect="plain">状态标签</el-tag>
+          </div>
+          <div class="h-72 rounded-lg border border-dashed border-gray-200 bg-gray-50 flex items-center justify-center text-sm text-gray-400">
+            页面主体占位
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    const { createApp, ref } = Vue;
+    const app = createApp({
+      setup() {
+        const nav = ref([
+          { name: '工作台', icon: 'Grid', active: true },
+          { name: '列表管理', icon: 'List', active: false },
+          { name: '规则配置', icon: 'Setting', active: false },
+          { name: '操作记录', icon: 'Clock', active: false }
+        ]);
+        const summary = ref([
+          { label: '总量', value: '128', note: '较昨日 +8', tone: 'text-emerald-600' },
+          { label: '待处理', value: '16', note: '需要优先查看', tone: 'text-orange-600' },
+          { label: '异常', value: '3', note: '含高风险 1 项', tone: 'text-red-600' },
+          { label: '完成率', value: '92%', note: '稳定', tone: 'text-blue-600' }
+        ]);
+        return { nav, summary };
+      }
+    });
+    for (const [key, component] of Object.entries(ElementPlusIconsVue)) app.component(key, component);
+    app.use(ElementPlus).mount('#app');
+  </script>
+</body>
+</html>
