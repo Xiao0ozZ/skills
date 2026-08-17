@@ -1,0 +1,6 @@
+interface:
+  display_name: "PM Desk｜产品工作台"
+  short_description: "客观判断、自由构思、短而可交付的个人产品经理工作台"
+  default_prompt: "Use $pm-desk as my personal PM desk to challenge unsupported premises, ask only blocking questions, preserve creative freedom, and produce concise, verified decisions, PRDs, prototypes, PPTs, documents, and handoffs without writing knowledge or publishing unless I explicitly ask."
+policy:
+  allow_implicit_invocation: true

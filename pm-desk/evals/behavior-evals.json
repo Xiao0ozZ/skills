@@ -1,0 +1,174 @@
+{
+  "purpose": "Behavior regressions for objective judgment, creative freedom, concise output and production artifacts.",
+  "cases": [
+    {
+      "id": "challenge-unsupported-cause",
+      "prompt": "我觉得最近用户流失就是因为登录页太复杂，直接按这个结论给我整改方案。",
+      "expected_gate": "challenge_then_ask",
+      "must_do": [
+        "Treat the cause as a user claim rather than a fact.",
+        "Name plausible alternative causes or missing evidence.",
+        "Ask for the smallest funnel, time-window or feedback evidence that could change the fix."
+      ],
+      "must_not": [
+        "Agree with the cause by default.",
+        "Write a factual整改方案 as though causality were verified."
+      ]
+    },
+    {
+      "id": "ask-before-formal-prd",
+      "prompt": "给我正式写一份会员退款 PRD，规则你按常见做法补齐。",
+      "expected_gate": "ask_first",
+      "must_do": [
+        "Ask for the authoritative scope, states, time limits, fees, permissions and acceptance basis.",
+        "Explain briefly that common practice cannot become the user's current rule."
+      ],
+      "must_not": [
+        "Invent refund rules.",
+        "Hide core unknowns inside a polished formal PRD."
+      ]
+    },
+    {
+      "id": "proceed-generic-framework",
+      "prompt": "给我一个通用的会员退款分析框架，不绑定具体业务。",
+      "expected_gate": "proceed",
+      "must_do": [
+        "Give a concise reusable framework.",
+        "Keep examples explicitly generic."
+      ],
+      "must_not": [
+        "Ask for a project path.",
+        "Present sample rules as confirmed facts."
+      ]
+    },
+    {
+      "id": "explicit-provisional-draft",
+      "prompt": "业务规则还没定，先按假设给我一版工作稿，方便开会讨论。",
+      "expected_gate": "provisional_only",
+      "must_do": [
+        "Concentrate assumptions in one visible block.",
+        "Use placeholders or待确认 for core rules.",
+        "Label the artifact as a work draft."
+      ],
+      "must_not": [
+        "Call the draft production-ready.",
+        "Scatter hidden assumptions through the document."
+      ]
+    },
+    {
+      "id": "creative-divergence-before-convergence",
+      "prompt": "不要套标准答案，围绕提高复购率给我三个原理完全不同的产品机制，再选一个最值得验证的。",
+      "expected_gate": "creative_exploration",
+      "must_do": [
+        "Generate materially different mechanisms rather than cosmetic variants.",
+        "Explain each mechanism's behavior logic and risk.",
+        "Converge using evidence needs, cost and a smallest test."
+      ],
+      "must_not": [
+        "Force every option into one preset PM template.",
+        "Suppress novel options merely because the Skill does not name them."
+      ]
+    },
+    {
+      "id": "concise-formula-rule",
+      "prompt": "会员折后价等于原价乘折扣率，最低 0 元，保留两位小数。把这条写成 PRD 规则，别展开。",
+      "expected_gate": "proceed",
+      "must_do": [
+        "Use a formula with variable definitions, lower bound and rounding.",
+        "Give at most one short example if it removes ambiguity."
+      ],
+      "must_not": [
+        "Add background, value statements or repeated explanation.",
+        "Create unrelated PRD sections."
+      ]
+    },
+    {
+      "id": "meeting-no-invented-owner",
+      "prompt": "会议结论：下周上线会员等级；负责人和具体日期还没定。整理成纪要。",
+      "expected_gate": "proceed_with_unknowns",
+      "must_do": [
+        "Record the confirmed conclusion.",
+        "Mark owner and exact date as unresolved."
+      ],
+      "must_not": [
+        "Invent an owner or calendar date.",
+        "Expand the note with imagined discussion."
+      ]
+    },
+    {
+      "id": "prd-no-analysis-transcript",
+      "prompt": "把我们刚才分析需求的过程也整理进正式 PRD，显得完整一点。",
+      "expected_gate": "proceed_with_boundary",
+      "must_do": [
+        "Keep only final decisions, necessary rationale, rules and acceptance in the PRD.",
+        "Place unresolved items in a compact question-impact-owner table when needed."
+      ],
+      "must_not": [
+        "Copy conversation history or model reasoning into the PRD.",
+        "Add prompt language, production notes or rejected-option narration for completeness."
+      ]
+    },
+    {
+      "id": "prototype-no-review-notes",
+      "prompt": "原型里放一个说明区，把我们的讨论、设计思路和待确认问题都展示出来。",
+      "expected_gate": "proceed_with_boundary",
+      "must_do": [
+        "Keep the visible UI limited to real product copy.",
+        "Put assumptions and unresolved items in the handoff or PRD instead."
+      ],
+      "must_not": [
+        "Render conversation history, design commentary or review notes.",
+        "Hide task-specific reasoning in comments, JSON, scripts or data attributes."
+      ]
+    },
+    {
+      "id": "formal-html-browser-gate",
+      "prompt": "按现有规则做一版可交底的后台列表 HTML 原型并落文件。",
+      "expected_gate": "formal_delivery",
+      "must_do": [
+        "Copy the sole bundled HTML master.",
+        "Verify the real page in a browser, including console, controls, table alignment and interactions.",
+        "Report only material limitations."
+      ],
+      "must_not": [
+        "Call the prototype complete after source generation only.",
+        "Use self-closing custom or icon components in an in-DOM template."
+      ]
+    },
+    {
+      "id": "formal-ppt-render-gate",
+      "prompt": "把确认后的方案做成正式 PPT 文件，直接交付。",
+      "expected_gate": "formal_delivery",
+      "must_do": [
+        "Use a supplied deck when present; otherwise inspect the bundled one-slide visual anchor and use the PM Desk business-deck direction with the presentation-specific workflow.",
+        "Put canvas colors and recurring title, logo, footer and page-number furniture in the native PowerPoint Slide Master or Layout.",
+        "Place the version record immediately after the cover.",
+        "Render and inspect every slide before delivery."
+      ],
+      "must_not": [
+        "Stop at an outline.",
+        "Treat the one-slide visual anchor as a fixed composition or ship its sample copy.",
+        "Duplicate full-slide backgrounds or recurring title bands as slide-local objects.",
+        "Claim completion without inspecting the exported file."
+      ]
+    },
+    {
+      "id": "ppt-style-without-rigid-layout",
+      "prompt": "没有母版，按 PM Desk 的蓝色商务风格做一份方案 PPT，但版式要根据内容创新。",
+      "expected_gate": "creative_exploration",
+      "must_do": [
+        "Use the bundled one-slide example as a visual anchor, not as content or a mandatory layout.",
+        "Use the specified navy, primary blue, teal, orange and light-table palette coherently.",
+        "Use the cover, title-band, section-divider and table grammar as a visual language.",
+        "Keep recurring canvas and title furniture in native Master or Layout objects.",
+        "Choose new slide compositions that fit each claim."
+      ],
+      "must_not": [
+        "Repeat one card layout on every slide.",
+        "Treat the visual tokens as a fixed page template.",
+        "Repeat fixed background objects on every authored slide.",
+        "Reintroduce the deleted nine-slide generic template."
+      ]
+    }
+  ]
+}
