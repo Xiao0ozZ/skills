@@ -1,0 +1,769 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>资料管理</title>
+    <link rel="icon" href="data:," />
+
+    <!--
+      HTML 原型模板规范（AI 创建页面前必须先读完）
+
+      1. 本文件用于需求阶段原型。复制本文件后再修改，不要从历史 HTML 复制代码。
+      2. 可参考旧页面的视觉，但只复刻布局、间距、字体、颜色和组件效果。
+      3. 只修改标记为 [AI-EDIT] 的区域；[TEMPLATE-LOCK] 区域保持结构和标记不变。
+      4. 登录页或其他不使用后台壳的终端是唯一例外：可替换独立预览壳，但必须保留依赖、基础主题和全部导入边界。
+      5. 页面标题区不是强制结构：一级列表、配置和看板通常使用 standard；二级详情页可使用 back-only 或 none。
+         使用 none 时删除整个 data-page-header，页面直接从 data-business-content 开始。
+      6. data-page-content 是完整页面；标题和子标题下方必须保留唯一 data-business-content 自由业务区。
+         默认的筛选和表格只是示例，可按实际业务整体替换为统计卡、表单、详情、看板、控制台、地图或其他布局。
+         只保留 data-business-content 外层标记，不得要求所有页面都使用列表结构。
+         弹窗和抽屉必须放进 data-page-overlay。
+      7. 页面状态、方法和模拟数据只能写在 PAGE_LOGIC_START/END 之间。
+      8. 页面专属样式只能写在 PAGE_STYLE_START/END 之间，并以页面根类名开头。
+      9. 禁止 onclick、直接操作 DOM、window.location、.html 跳转、jQuery 和未登记依赖。
+      10. Element Plus 和其他自定义组件必须显式闭合，不能使用自闭合写法。
+      11. 不新增全局样式、CDN、外部字体和外部图片；独立预览依赖由模板统一提供。
+      12. 字号统一使用模板变量：页面标题 24px、区块标题 16px、正文/表格/表单/详情字段 14px、辅助信息 12-13px。
+          不允许依赖浏览器默认字号，也不得把详情字段放大到与区块标题相同的层级。
+      13. 查询、重置、刷新等紧凑工具操作使用图标按钮，并提供 Tooltip 与 aria-label；
+          编辑、删除、查看、审核、停用等业务操作使用文字按钮，不得改成只有图标的按钮。
+      14. 页面定案后不再修改 HTML，由导入器提取内容、覆盖层、逻辑和样式生成 Vue 页面。
+    -->
+
+    <!-- TEMPLATE-LOCK: 原型独立预览依赖。正式导入时整段移除。 -->
+    <!-- PROTOTYPE_DEPENDENCIES_START -->
+    <link rel="stylesheet" href="https://unpkg.com/element-plus@2.8.0/dist/index.css" />
+    <!-- PROTOTYPE_DEPENDENCIES_END -->
+
+    <!-- TEMPLATE-LOCK: 与 Vue 工程一致的基础主题变量。 -->
+    <!-- PROTOTYPE_BASE_STYLE_START -->
+    <style>
+      :root {
+        --app-color-primary: #2563eb;
+        --app-color-primary-hover: #1d4ed8;
+        --app-color-primary-active: #1e40af;
+        --app-color-primary-shadow: rgb(37 99 235 / 18%);
+        --app-color-success: #16a34a;
+        --app-color-warning: #f59e0b;
+        --app-color-danger: #dc2626;
+        --app-color-text-primary: #0f172a;
+        --app-color-text-secondary: #475569;
+        --app-color-text-muted: #64748b;
+        --app-color-border: #dbe3ec;
+        --app-color-border-light: #e5e7eb;
+        --app-color-border-subtle: #f3f4f6;
+        --app-color-surface: #ffffff;
+        --app-color-surface-subtle: #f8fafc;
+        --app-color-surface-muted: #f9fafb;
+        --app-color-page: #f5f7fb;
+        --app-font-family-sans:
+          'SF Pro Text', 'SF Pro Display', 'SF Pro', 'PingFang SC', 'PingFang TC', -apple-system,
+          BlinkMacSystemFont, 'Segoe UI', system-ui, Roboto, 'Helvetica Neue', Arial, 'Noto Sans',
+          'Hiragino Sans GB', 'Microsoft YaHei', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+          'Noto Color Emoji', sans-serif;
+        --app-font-family-mono:
+          ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+        --app-font-size-xs: 12px;
+        --app-font-size-sm: 13px;
+        --app-font-size-base: 14px;
+        --app-font-size-md: 16px;
+        --app-font-size-page-title: 24px;
+        --app-space-2: 8px;
+        --app-space-3: 12px;
+        --app-space-4: 16px;
+        --app-space-6: 24px;
+        --app-radius-control: 4px;
+        --app-radius-panel: 8px;
+        --app-radius-list-panel: 12px;
+        --app-shadow-panel: 0 1px 3px rgb(15 23 42 / 8%);
+        --app-control-height: 36px;
+        --app-table-row-height: 48px;
+        --app-panel-header-height: 52px;
+        --el-color-primary: var(--app-color-primary);
+        --el-font-family: var(--app-font-family-sans);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body,
+      #app {
+        width: 100%;
+        min-width: 1180px;
+        height: 100%;
+        margin: 0;
+      }
+
+      body {
+        overflow: hidden;
+        color: var(--app-color-text-primary);
+        background: var(--app-color-page);
+        font-family: var(--app-font-family-sans);
+        font-size: var(--app-font-size-base);
+        line-height: 1.5;
+      }
+
+      button,
+      input,
+      textarea,
+      select {
+        font: inherit;
+      }
+
+      [v-cloak] {
+        display: none;
+      }
+
+      .prototype-app {
+        display: flex;
+        height: 100%;
+      }
+
+      .prototype-sidebar {
+        flex: 0 0 256px;
+        width: 256px;
+        padding: 18px 12px;
+        overflow-y: auto;
+        color: rgb(255 255 255 / 86%);
+        background: var(--app-color-primary);
+      }
+
+      .prototype-brand {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        height: 36px;
+        padding: 0 12px;
+        margin-bottom: 24px;
+        border: 0;
+        border-radius: 0;
+        background: transparent;
+        font-size: 17px;
+        font-weight: 700;
+      }
+
+      .prototype-brand > span {
+        min-width: 0;
+        overflow: hidden;
+        color: #fff;
+        line-height: 1.2;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .prototype-brand small {
+        flex: 0 0 auto;
+        font-size: 12px;
+        font-weight: 600;
+        color: rgb(255 255 255 / 72%);
+        white-space: nowrap;
+      }
+
+      .prototype-menu-group {
+        margin: 20px 12px 8px;
+        font-size: 12px;
+        color: rgb(255 255 255 / 56%);
+      }
+
+      .prototype-menu-item {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        height: 40px;
+        padding: 0 12px;
+        margin-bottom: 4px;
+        border-radius: 6px;
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .prototype-menu-item.is-active {
+        color: #fff;
+        background: rgb(255 255 255 / 17%);
+      }
+
+      .prototype-workspace {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        min-width: 0;
+      }
+
+      .prototype-topbar {
+        display: flex;
+        flex: 0 0 64px;
+        align-items: center;
+        justify-content: space-between;
+        height: 64px;
+        padding: 0 28px;
+        background: #fff;
+        border-bottom: 1px solid var(--app-color-border-light);
+      }
+
+      .prototype-breadcrumb {
+        font-size: 14px;
+        color: var(--app-color-text-muted);
+      }
+
+      .prototype-user {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .prototype-avatar {
+        display: grid;
+        width: 30px;
+        height: 30px;
+        color: #fff;
+        background: #94a3b8;
+        border-radius: 50%;
+        place-items: center;
+      }
+
+      .prototype-main {
+        flex: 1;
+        min-height: 0;
+        padding: 24px;
+        overflow: auto;
+      }
+    </style>
+    <!-- PROTOTYPE_BASE_STYLE_END -->
+
+    <!-- [AI-EDIT] PAGE_STYLE_START: 仅写当前页面样式，所有选择器必须以 .standard-list-page 开头。 -->
+    <style data-page-style>
+      .standard-list-page {
+        width: 100%;
+        font-size: var(--app-font-size-base);
+        line-height: 1.5;
+      }
+
+      /* 页面自行增加的区块标题使用此层级；正文、表格、表单和详情字段继续使用 14px。 */
+      .standard-list-page .section-title {
+        margin: 0;
+        font-size: var(--app-font-size-md);
+        font-weight: 700;
+        line-height: 1.5;
+      }
+
+      .standard-list-page .page-heading {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        margin-bottom: 24px;
+      }
+
+      .standard-list-page .page-heading h1 {
+        margin: 0;
+        color: #1f2937;
+        font-size: 24px;
+        font-weight: 700;
+        line-height: 32px;
+        letter-spacing: 0;
+      }
+
+      .standard-list-page .page-heading p {
+        margin: 4px 0 0;
+        font-size: 14px;
+        color: #6b7280;
+      }
+
+      .standard-list-page .page-heading .el-button--large {
+        box-shadow: 0 4px 6px -1px var(--app-color-primary-shadow);
+      }
+
+      .standard-list-page .content-panel {
+        overflow: hidden;
+        background: var(--app-color-surface);
+        border: 1px solid var(--app-color-border-subtle);
+        border-radius: var(--app-radius-list-panel);
+        box-shadow: 0 1px 3px rgb(15 23 42 / 8%);
+      }
+
+      .standard-list-page .filter-bar,
+      .standard-list-page .pagination-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px;
+      }
+
+      .standard-list-page .filter-bar {
+        min-height: 60px;
+        border-bottom: 1px solid var(--app-color-border-light);
+        background: var(--app-color-surface-muted);
+      }
+
+      .standard-list-page .filter-fields,
+      .standard-list-page .filter-summary {
+        display: flex;
+        align-items: center;
+      }
+
+      .standard-list-page .filter-fields {
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .standard-list-page .filter-summary {
+        flex: 0 0 auto;
+        margin-left: 16px;
+        font-size: 14px;
+        color: #6b7280;
+      }
+
+      .standard-list-page .filter-fields .el-input {
+        width: 280px;
+      }
+
+      .standard-list-page .filter-fields .el-select {
+        width: 160px;
+      }
+
+      .standard-list-page .table-wrap {
+        padding: 0;
+      }
+
+      .standard-list-page .el-table th.el-table__cell {
+        color: #374151;
+        font-weight: 700;
+        background: var(--app-color-surface-muted);
+      }
+
+      .standard-list-page .pagination-bar {
+        border-top: 1px solid var(--app-color-border-light);
+        background: var(--app-color-surface-muted);
+      }
+
+      .standard-list-page .name-cell strong {
+        display: block;
+        font-size: 14px;
+      }
+
+      .standard-list-page .name-cell span {
+        display: block;
+        margin-top: 2px;
+        font-size: 12px;
+        color: var(--app-color-text-muted);
+      }
+
+      .standard-list-dialog .el-dialog__body {
+        padding-top: 10px;
+      }
+
+      .standard-list-dialog .dialog-footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+      }
+    </style>
+    <!-- PAGE_STYLE_END -->
+
+    <!-- [AI-EDIT] 页面元数据。导入器将据此生成文件、路由和菜单。 -->
+    <script id="prototype-page-manifest" type="application/json">
+      {
+        "templateVersion": 1,
+        "pageKey": "standard-list-page",
+        "pageTitle": "资料管理",
+        "pageType": "list",
+        "pageHeaderMode": "standard",
+        "client": "operation",
+        "routePath": "/operation/materials",
+        "menuSection": "business",
+        "menuTitle": "资料管理",
+        "menuIcon": "Document",
+        "rootClass": "standard-list-page",
+        "contentSelector": "[data-page-content]",
+        "businessContentSelector": "[data-business-content]",
+        "overlaySelector": "[data-page-overlay]",
+        "styleSelector": "[data-page-style]",
+        "dependencies": [
+          "vue",
+          "element-plus",
+          "element-plus/locale/zh-cn",
+          "@element-plus/icons-vue"
+        ],
+        "assets": []
+      }
+    </script>
+  </head>
+
+  <body>
+    <div id="app" class="prototype-app" v-cloak>
+      <!-- TEMPLATE-LOCK: HTML 独立预览外壳，导入时不进入 Vue 页面。 -->
+      <!-- PROTOTYPE_SHELL_START -->
+      <aside class="prototype-sidebar" data-prototype-shell="sidebar">
+        <div class="prototype-brand">
+          <span>业务管理平台</span>
+          <small>管理端</small>
+        </div>
+        <div class="prototype-menu-group">核心工作区</div>
+        <div class="prototype-menu-item">工作台首页</div>
+        <div class="prototype-menu-group">业务管理</div>
+        <div class="prototype-menu-item is-active">资料管理</div>
+        <div class="prototype-menu-item">业务配置</div>
+      </aside>
+
+      <div class="prototype-workspace">
+        <header class="prototype-topbar" data-prototype-shell="topbar">
+          <div class="prototype-breadcrumb">首页 / 业务管理 / 资料管理</div>
+          <el-dropdown trigger="click">
+            <div class="prototype-user" role="button" aria-label="账号菜单" tabindex="0">
+              <span class="prototype-avatar">A</span>
+              <span>Admin</span>
+            </div>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item>退出登录</el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+        </header>
+        <!-- PROTOTYPE_SHELL_END -->
+
+        <main class="prototype-main">
+          <!-- [AI-EDIT] PAGE_CONTENT_START: Vue 页面只提取此节点。只能有一个 data-page-content。 -->
+          <section
+            class="standard-list-page"
+            data-page-content
+            data-page-root="standard-list-page"
+            data-page-key="standard-list-page"
+          >
+            <!--
+              [AI-EDIT] PAGE_HEADER_OPTIONAL
+              standard：保留标题、子标题和右侧页面主操作，主操作与标题区底部对齐；
+              back-only：改为返回按钮或对象摘要，不强制显示 H1；
+              none：二级详情等页面可删除整个 data-page-header，并将 manifest.pageHeaderMode 改为 none。
+            -->
+            <div
+              class="page-heading"
+              data-page-header="standard"
+              data-block-id="page-heading"
+              data-block-name="页面标题"
+            >
+              <div>
+                <h1>资料管理</h1>
+                <p>查询、维护并导出业务资料。</p>
+              </div>
+              <el-button type="primary" size="large" :icon="Plus" @click="openCreateDialog"
+                >新增资料</el-button
+              >
+            </div>
+
+            <!--
+              [AI-EDIT] BUSINESS_CONTENT_START
+              子标题以下全部属于自由业务内容区。下面提供“筛选 + 表格”的默认结构。
+              可根据实际需求删除并整体重做内部结构，例如：
+              - 表单/新增流程：分组表单、步骤、费用摘要、确认区；
+              - 详情页：摘要、分组资料、时间线、日志；
+              - 看板/控制台：对象列表、地图、甘特图、图表、操作面板；
+              - 配置页：标签页、规则区、版本和日志。
+              无论使用哪种布局，只保留唯一 data-business-content 外层节点，并将 data-layout-type
+              改为 list、form、detail、dashboard、console 或 custom。
+            -->
+            <div data-business-content data-layout-type="list">
+              <section class="content-panel" data-block-id="list-panel" data-block-name="资料列表">
+                <div class="filter-bar">
+                  <div class="filter-fields">
+                    <el-input
+                      v-model="filters.keyword"
+                      :prefix-icon="Search"
+                      clearable
+                      placeholder="搜索编号或名称"
+                    ></el-input>
+                    <el-select v-model="filters.status" clearable placeholder="全部状态">
+                      <el-option label="启用" value="enabled"></el-option>
+                      <el-option label="停用" value="disabled"></el-option>
+                    </el-select>
+                    <el-tooltip content="重置筛选" placement="top">
+                      <el-button
+                        circle
+                        :icon="Refresh"
+                        aria-label="重置筛选"
+                        @click="resetFilters"
+                      ></el-button>
+                    </el-tooltip>
+                    <el-button type="primary" plain :icon="Download" @click="exportRows">导出</el-button>
+                  </div>
+                  <div class="filter-summary">共 {{ filteredRows.length }} 笔资料</div>
+                </div>
+
+                <div class="table-wrap">
+                  <el-table
+                    :data="pagedRows"
+                    row-key="id"
+                    stripe
+                    table-layout="fixed"
+                    style="width: 100%"
+                  >
+                    <el-table-column prop="code" label="编号" width="140"></el-table-column>
+                    <el-table-column label="名称" min-width="220">
+                      <template #default="scope">
+                        <div class="name-cell">
+                          <strong>{{ scope.row.name }}</strong>
+                          <span>{{ scope.row.description }}</span>
+                        </div>
+                      </template>
+                    </el-table-column>
+                    <el-table-column prop="category" label="分类" min-width="150"></el-table-column>
+                    <el-table-column label="状态" width="110">
+                      <template #default="scope">
+                        <el-tag :type="scope.row.status === 'enabled' ? 'success' : 'info'">
+                          {{ scope.row.status === 'enabled' ? '启用' : '停用' }}
+                        </el-tag>
+                      </template>
+                    </el-table-column>
+                    <el-table-column prop="updatedAt" label="更新时间" width="170"></el-table-column>
+                    <el-table-column label="操作" width="150" align="right">
+                      <template #default="scope">
+                        <el-button link type="primary" @click="openEditDialog(scope.row)">编辑</el-button>
+                        <el-button link type="danger" @click="removeRow(scope.row)">删除</el-button>
+                      </template>
+                    </el-table-column>
+                  </el-table>
+                </div>
+
+                <div class="pagination-bar">
+                  <span></span>
+                  <el-pagination
+                    v-model:current-page="pagination.page"
+                    v-model:page-size="pagination.pageSize"
+                    :page-sizes="[10, 20, 50]"
+                    :total="filteredRows.length"
+                    layout="total, sizes, prev, pager, next, jumper"
+                  ></el-pagination>
+                </div>
+              </section>
+            </div>
+            <!-- BUSINESS_CONTENT_END -->
+          </section>
+          <!-- PAGE_CONTENT_END -->
+        </main>
+      </div>
+
+      <!-- [AI-EDIT] PAGE_OVERLAYS_START: 所有 el-dialog/el-drawer 均放在这里，不能放到 #app 外。 -->
+      <el-dialog
+        v-model="dialogVisible"
+        class="standard-list-dialog"
+        data-page-overlay="dialog"
+        :title="dialogMode === 'create' ? '新增资料' : '编辑资料'"
+        width="640px"
+        destroy-on-close
+      >
+        <el-form ref="formRef" :model="form" :rules="formRules" label-width="90px">
+          <el-form-item label="资料名称" prop="name">
+            <el-input v-model="form.name" maxlength="30" show-word-limit></el-input>
+          </el-form-item>
+          <el-form-item label="资料分类" prop="category">
+            <el-select v-model="form.category" placeholder="请选择分类" style="width: 100%">
+              <el-option label="一般资料" value="一般资料"></el-option>
+              <el-option label="重点资料" value="重点资料"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="启用状态">
+            <el-switch v-model="form.enabled"></el-switch>
+          </el-form-item>
+          <el-form-item label="说明">
+            <el-input
+              v-model="form.description"
+              type="textarea"
+              :rows="3"
+              maxlength="100"
+              show-word-limit
+            ></el-input>
+          </el-form-item>
+        </el-form>
+        <template #footer>
+          <div class="dialog-footer">
+            <el-button @click="dialogVisible = false">取消</el-button>
+            <el-button type="primary" :loading="submitting" @click="submitForm">保存</el-button>
+          </div>
+        </template>
+      </el-dialog>
+      <!-- PAGE_OVERLAYS_END -->
+    </div>
+
+    <!-- TEMPLATE-LOCK: 独立预览运行依赖。导入器将移除此段。 -->
+    <!-- PROTOTYPE_DEPENDENCIES_START -->
+    <script src="https://unpkg.com/vue@3.4.21/dist/vue.global.prod.js"></script>
+    <script src="https://unpkg.com/element-plus@2.8.0/dist/index.full.min.js"></script>
+    <script src="https://unpkg.com/element-plus@2.8.0/dist/locale/zh-cn"></script>
+    <script src="https://unpkg.com/@element-plus/icons-vue@2.3.1/dist/index.iife.min.js"></script>
+    <!-- PROTOTYPE_DEPENDENCIES_END -->
+
+    <script data-page-script>
+      /* [AI-EDIT] PAGE_LOGIC_START: 只写页面状态、计算属性、方法和模拟数据。 */
+      function pageSetup() {
+        const { ref, reactive, computed } = Vue;
+        const { ElMessage, ElMessageBox } = ElementPlus;
+
+        const filters = reactive({ keyword: '', status: '' });
+        const pagination = reactive({ page: 1, pageSize: 10 });
+        const dialogVisible = ref(false);
+        const dialogMode = ref('create');
+        const editingId = ref(null);
+        const submitting = ref(false);
+        const formRef = ref();
+        const form = reactive({ name: '', category: '', enabled: true, description: '' });
+
+        const rows = ref([
+          {
+            id: 1,
+            code: 'ITEM-001',
+            name: '基础资料 A',
+            category: '一般资料',
+            status: 'enabled',
+            description: '常规业务资料',
+            updatedAt: '2026-07-13 10:20',
+          },
+          {
+            id: 2,
+            code: 'ITEM-002',
+            name: '重点资料 B',
+            category: '重点资料',
+            status: 'disabled',
+            description: '当前已停用',
+            updatedAt: '2026-07-12 16:40',
+          },
+          {
+            id: 3,
+            code: 'ITEM-003',
+            name: '基础资料 C',
+            category: '一般资料',
+            status: 'enabled',
+            description: '最近完成更新',
+            updatedAt: '2026-07-11 09:15',
+          },
+        ]);
+
+        const filteredRows = computed(() => {
+          const keyword = filters.keyword.trim().toLowerCase();
+          return rows.value.filter((item) => {
+            const matchesStatus = !filters.status || item.status === filters.status;
+            const matchesKeyword =
+              !keyword ||
+              item.code.toLowerCase().includes(keyword) ||
+              item.name.toLowerCase().includes(keyword);
+            return matchesStatus && matchesKeyword;
+          });
+        });
+
+        const pagedRows = computed(() => {
+          const start = (pagination.page - 1) * pagination.pageSize;
+          return filteredRows.value.slice(start, start + pagination.pageSize);
+        });
+
+        const formRules = {
+          name: [{ required: true, message: '请输入资料名称', trigger: 'blur' }],
+          category: [{ required: true, message: '请选择资料分类', trigger: 'change' }],
+        };
+
+        function resetFilters() {
+          filters.keyword = '';
+          filters.status = '';
+          pagination.page = 1;
+        }
+
+        function resetForm() {
+          form.name = '';
+          form.category = '';
+          form.enabled = true;
+          form.description = '';
+        }
+
+        function openCreateDialog() {
+          dialogMode.value = 'create';
+          editingId.value = null;
+          resetForm();
+          dialogVisible.value = true;
+        }
+
+        function openEditDialog(row) {
+          dialogMode.value = 'edit';
+          editingId.value = row.id;
+          form.name = row.name;
+          form.category = row.category;
+          form.enabled = row.status === 'enabled';
+          form.description = row.description;
+          dialogVisible.value = true;
+        }
+
+        async function submitForm() {
+          if (!formRef.value) return;
+          const valid = await formRef.value.validate().catch(() => false);
+          if (!valid) return;
+          submitting.value = true;
+          await new Promise((resolve) => setTimeout(resolve, 300));
+          if (dialogMode.value === 'create') {
+            rows.value.unshift({
+              id: Date.now(),
+              code: `ITEM-${String(rows.value.length + 1).padStart(3, '0')}`,
+              name: form.name,
+              category: form.category,
+              status: form.enabled ? 'enabled' : 'disabled',
+              description: form.description || '暂无说明',
+              updatedAt: '2026-07-13 14:30',
+            });
+          } else {
+            const target = rows.value.find((item) => item.id === editingId.value);
+            if (target) {
+              target.name = form.name;
+              target.category = form.category;
+              target.status = form.enabled ? 'enabled' : 'disabled';
+              target.description = form.description || '暂无说明';
+            }
+          }
+          submitting.value = false;
+          dialogVisible.value = false;
+          ElMessage.success('保存成功');
+        }
+
+        async function removeRow(row) {
+          await ElMessageBox.confirm(`确认删除“${row.name}”吗？`, '删除确认', { type: 'warning' });
+          rows.value = rows.value.filter((item) => item.id !== row.id);
+          ElMessage.success('删除成功');
+        }
+
+        function exportRows() {
+          ElMessage.success('导出任务已创建');
+        }
+
+        return {
+          Search: ElementPlusIconsVue.Search,
+          Refresh: ElementPlusIconsVue.Refresh,
+          Plus: ElementPlusIconsVue.Plus,
+          Download: ElementPlusIconsVue.Download,
+          filters,
+          pagination,
+          dialogVisible,
+          dialogMode,
+          submitting,
+          formRef,
+          form,
+          formRules,
+          filteredRows,
+          pagedRows,
+          resetFilters,
+          openCreateDialog,
+          openEditDialog,
+          submitForm,
+          removeRow,
+          exportRows,
+        };
+      }
+      /* PAGE_LOGIC_END */
+
+      /* TEMPLATE-LOCK: PROTOTYPE_BOOTSTRAP_START。导入时移除，不得放业务逻辑。 */
+      const app = Vue.createApp({ setup: pageSetup });
+      app.use(ElementPlus, { locale: ElementPlusLocaleZhCn });
+      app.mount('#app');
+      /* PROTOTYPE_BOOTSTRAP_END */
+    </script>
+  </body>
+</html>

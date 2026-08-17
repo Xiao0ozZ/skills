@@ -1,0 +1,149 @@
+{
+  "purpose": "Regression prompts for PM Desk triggering, work-mode selection and single-file section routing.",
+  "cases": [
+    {
+      "id": "quick-product-judgment",
+      "prompt": "帮我判断这个功能值不值得做",
+      "expected_skill": "pm-desk",
+      "expected_mode": "快答",
+      "needs_external_context": false,
+      "expected_section": "PM Judgment",
+      "notes": "Use the judgment lens internally; do not print a full checklist."
+    },
+    {
+      "id": "communication-draft",
+      "prompt": "这个需求延期了，帮我想想怎么跟客户说",
+      "expected_skill": "pm-desk",
+      "expected_mode": "快答",
+      "needs_external_context": false,
+      "expected_section": "Output Standard",
+      "notes": "Give sendable wording first and avoid a communication-method lecture."
+    },
+    {
+      "id": "creative-product-options",
+      "prompt": "先别套常规方案，帮我发散三个完全不同的会员增长机制，再判断哪个值得验证",
+      "expected_skill": "pm-desk",
+      "expected_mode": "工作稿",
+      "needs_external_context": false,
+      "expected_section": "Freedom And Guardrails",
+      "notes": "Preserve divergent thinking before converging on a test."
+    },
+    {
+      "id": "work-draft-prd",
+      "prompt": "先来一版会员等级的 PRD 草稿",
+      "expected_skill": "pm-desk",
+      "expected_mode": "工作稿",
+      "needs_external_context": false,
+      "expected_section": "PRD And Business Documents",
+      "notes": "Use concentrated assumptions and placeholders for core unknowns."
+    },
+    {
+      "id": "formal-prd-write",
+      "prompt": "把这个 PRD 正式落文件，并补版本记录",
+      "expected_skill": "pm-desk",
+      "expected_mode": "正式交付",
+      "needs_external_context": true,
+      "expected_section": "Formal Document Rule",
+      "notes": "Confirm the target/source if absent, then write and verify the file."
+    },
+    {
+      "id": "generic-business-framework",
+      "prompt": "企业月结这种能力一般怎么设计？",
+      "expected_skill": "pm-desk",
+      "expected_mode": "快答",
+      "needs_external_context": false,
+      "expected_section": "PM Judgment",
+      "notes": "Generic wording is not a source signal; examples remain generic."
+    },
+    {
+      "id": "material-intake",
+      "prompt": "我刚接手一堆资料，先帮我看看怎么整理",
+      "expected_skill": "pm-desk",
+      "expected_mode": "工作稿",
+      "needs_external_context": true,
+      "expected_section": "Context, Files And Knowledge",
+      "notes": "Identify entry and gaps first; do not move files automatically."
+    },
+    {
+      "id": "meeting-summary",
+      "prompt": "下面是会议转写，帮我整理纪要",
+      "expected_skill": "pm-desk",
+      "expected_mode": "工作稿",
+      "needs_external_context": false,
+      "expected_section": "Meetings, Handoff And Closeout",
+      "notes": "Decisions and actions first; do not infer owner/date."
+    },
+    {
+      "id": "obsidian-proposal",
+      "prompt": "这条经验记到 Obsidian，先给我路径、摘要和双链建议",
+      "expected_skill": "pm-desk",
+      "expected_mode": "正式交付",
+      "needs_external_context": false,
+      "expected_section": "Context, Files And Knowledge",
+      "notes": "Propose only and wait before writing."
+    },
+    {
+      "id": "ppt-story-draft",
+      "prompt": "帮我做一个汇报 PPT 的核心叙事和关键页",
+      "expected_skill": "pm-desk",
+      "expected_mode": "工作稿",
+      "needs_external_context": false,
+      "expected_section": "PPT",
+      "notes": "Define audience outcome and narrative; do not create a file unless asked."
+    },
+    {
+      "id": "ppt-formal-file",
+      "prompt": "把确认后的方案直接做成正式 PPTX，按我的工作台风格交付",
+      "expected_skill": "pm-desk",
+      "expected_mode": "正式交付",
+      "needs_external_context": true,
+      "expected_section": "PPT",
+      "notes": "Use the presentation workflow and PM Desk visual baseline when no user deck exists."
+    },
+    {
+      "id": "prototype-draft",
+      "prompt": "先出一版后台订单列表的 HTML 原型页面",
+      "expected_skill": "pm-desk",
+      "expected_mode": "工作稿",
+      "needs_external_context": false,
+      "expected_section": "HTML Prototype",
+      "notes": "Copy the sole master and design the list page to the task."
+    },
+    {
+      "id": "workflow-maintenance",
+      "prompt": "继续极致优化我的 PM Desk skill，但不要发布",
+      "expected_skill": "pm-desk",
+      "expected_mode": "正式交付",
+      "needs_external_context": false,
+      "expected_section": "Skill Maintenance",
+      "notes": "Edit the source only, keep one Markdown and run validation."
+    },
+    {
+      "id": "negative-code-review",
+      "prompt": "review 这段 TypeScript 代码有没有 bug",
+      "expected_skill": "not-pm-desk",
+      "expected_mode": "不触发",
+      "needs_external_context": true,
+      "expected_section": "none",
+      "notes": "Use software code-review behavior."
+    },
+    {
+      "id": "negative-data-analysis",
+      "prompt": "分析这个 CSV，给我画趋势图和异常点",
+      "expected_skill": "not-pm-desk",
+      "expected_mode": "不触发",
+      "needs_external_context": true,
+      "expected_section": "none",
+      "notes": "Use data/spreadsheet analysis workflow."
+    },
+    {
+      "id": "negative-format-only-doc-edit",
+      "prompt": "只修改这个 Word 文件的页边距和批注格式",
+      "expected_skill": "not-pm-desk",
+      "expected_mode": "不触发",
+      "needs_external_context": true,
+      "expected_section": "none",
+      "notes": "Use the document-format workflow unless PM content judgment is also requested."
+    }
+  ]
+}
